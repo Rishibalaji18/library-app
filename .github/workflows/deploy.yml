@@ -1,0 +1,28 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Testing Tools
+        run: pip install pytest
+
+      - name: Run Automated Unit Tests
+        run: pytest test_app.py
+
+      - name: Build Local Image
+        run: |
+          git_tag=$(git rev-parse --short HEAD)
+          docker build -t library-app:$git_tag .
