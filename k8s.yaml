@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: library-app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: library-app
+  template:
+    metadata:
+      labels:
+        app: library-app
+    spec:
+      containers:
+      - name: library-app-container
+        image: YOUR_DOCKERHUB_USERNAME/library-app:latest
+        imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: library-app-service
+spec:
+  type: NodePort
+  selector:
+    app: library-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
